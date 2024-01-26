@@ -8,8 +8,8 @@ MAGENTA='\e[35m'
 CYAN='\e[36m'
 RESET='\e[0m'
 
-workdir="${1:-/ngen}"
-cd "${workdir}" || { echo -e "${RED}Failed to change directory to ${workdir}${RESET}"; exit 1; }
+# workdir="${1:-/ngen}"
+# cd "${workdir}" || { echo -e "${RED}Failed to change directory to ${workdir}${RESET}"; exit 1; }
 set -e
 echo -e "${CYAN}Working directory is:${RESET}"
 pwd
@@ -55,7 +55,13 @@ if [ "$2" == "auto" ]
     echo "Running NextGen model framework in parallel mode"
     procs=$(nproc)
     procs=2 # Temporary fixed value, remove for full utilization
-    generate_partition "$selected_catchment" "$selected_nexus" "$procs"
+    partitions=$(find . -name "*partitions_$procs.json")
+    if [[ -z $partitions ]]; then
+      echo "No partitions file found, generating..."
+      generate_partition "$selected_catchment" "$selected_nexus" "$procs"
+    else
+      echo "Found paritions file! "$partitions
+    fi
     mpirun -n $procs /dmod/bin/ngen-parallel $selected_catchment all $selected_nexus all $selected_realization $(pwd)/partitions_$procs.json
     echo "Run completed successfully, exiting, have a nice day!"
     exit 0
