@@ -8,8 +8,8 @@ MAGENTA='\e[35m'
 CYAN='\e[36m'
 RESET='\e[0m'
 
-# workdir="${1:-/ngen}"
-# cd "${workdir}" || { echo -e "${RED}Failed to change directory to ${workdir}${RESET}"; exit 1; }
+workdir="${1:-/ngen}"
+cd "${workdir}" || { echo -e "${RED}Failed to change directory to ${workdir}${RESET}"; exit 1; }
 set -e
 echo -e "${CYAN}Working directory is:${RESET}"
 pwd
